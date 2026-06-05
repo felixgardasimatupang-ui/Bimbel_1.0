@@ -1,3 +1,4 @@
+import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
 import { fail, ok } from '@/server/api';
@@ -22,7 +23,7 @@ export async function POST(request: Request) {
     return NextResponse.json(fail('Identitas dan kata sandi wajib diisi.', 'validation_error'), { status: 400 });
   }
 
-  const result = authenticateLogin({
+  const result = await authenticateLogin({
     identifier: body.identifier,
     password: body.password,
     branchCode: body.branchCode
@@ -31,6 +32,22 @@ export async function POST(request: Request) {
   if (!result.ok) {
     return NextResponse.json(fail(result.error, result.code), { status: 401 });
   }
+
+  const cookieStore = await cookies();
+  cookieStore.set('session_id', result.session.sessionId, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 60 * 60 * 8
+  });
+  cookieStore.set('branch_id', result.session.branchId, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 60 * 60 * 8
+  });
 
   return NextResponse.json(
     ok({

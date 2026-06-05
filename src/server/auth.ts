@@ -3,7 +3,7 @@ import { randomUUID } from 'node:crypto';
 import { branches, type BranchRecord, type PermissionKey, type RoleCode, type UserRecord, users } from '@/server/catalog';
 import { recordAuditEvent } from '@/server/audit-store';
 import { getPermissionsForRoleCodes } from '@/server/rbac';
-import { verifyPassword } from '@/server/password';
+import { verifyPasswordAsync } from '@/server/password';
 
 export interface AuthenticatedSession {
   sessionId: string;
@@ -49,7 +49,7 @@ export function findBranchByCode(branchCode: string) {
   return branches.find((branch) => branch.code.toLowerCase() === branchCode.trim().toLowerCase());
 }
 
-export function authenticateLogin(input: LoginInput): LoginSuccess | LoginFailure {
+export async function authenticateLogin(input: LoginInput): Promise<LoginSuccess | LoginFailure> {
   const user = findUserByIdentifier(input.identifier);
 
   if (!user) {
@@ -122,7 +122,9 @@ export function authenticateLogin(input: LoginInput): LoginSuccess | LoginFailur
     };
   }
 
-  if (!verifyPassword(input.password, user.passwordHash)) {
+  const valid = await verifyPasswordAsync(input.password, user.passwordHash);
+
+  if (!valid) {
     recordAuditEvent({
       actor: user.id,
       action: 'login.failed',

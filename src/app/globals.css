@@ -1,3 +1,7 @@
+/* ═══════════════════════════════════════════
+   1. DESIGN TOKENS & RESET
+   ═══════════════════════════════════════════ */
+
 :root {
   --bg: #08111f;
   --bg-soft: rgba(13, 22, 37, 0.9);
@@ -66,6 +70,10 @@ img {
   display: block;
   max-width: 100%;
 }
+
+/* ═══════════════════════════════════════════
+   2. LAYOUT — App Shell & Sidebar
+   ═══════════════════════════════════════════ */
 
 .appShell {
   min-height: 100vh;
@@ -188,6 +196,10 @@ img {
   color: var(--muted);
   font-size: 0.85rem;
 }
+
+/* ═══════════════════════════════════════════
+   3. TOPBAR & PAGE HEADER
+   ═══════════════════════════════════════════ */
 
 .workspace {
   min-width: 0;
@@ -375,6 +387,19 @@ img {
 .panel {
   border-radius: var(--radius-xl);
   overflow: hidden;
+}
+
+.panelHeader,
+.sectionHeading,
+/* ═══════════════════════════════════════════
+   5. PANEL & CARD COMPONENTS
+   ═══════════════════════════════════════════ */
+
+.featureHero {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-start;
 }
 
 .panelHeader,
@@ -734,13 +759,17 @@ img {
   overflow: auto;
 }
 
-.scheduleHeadRow,
-.scheduleRow {
-  display: grid;
-  grid-template-columns: 90px repeat(5, minmax(120px, 1fr));
-  gap: 10px;
-  align-items: stretch;
-}
+  /* ═══════════════════════════════════════════
+     4. CONTENT AREA
+     ═══════════════════════════════════════════ */
+
+  .scheduleHeadRow,
+  .scheduleRow {
+    display: grid;
+    grid-template-columns: 90px repeat(5, minmax(120px, 1fr));
+    gap: 10px;
+    align-items: stretch;
+  }
 
 .scheduleHeadRow {
   margin-bottom: 10px;
@@ -870,6 +899,10 @@ img {
 .primaryButton:hover {
   transform: translateY(-1px);
 }
+
+/* ═══════════════════════════════════════════
+   6. AUTH & LOGIN
+   ═══════════════════════════════════════════ */
 
 .authPage {
   min-height: 100vh;
@@ -1004,6 +1037,10 @@ img {
   font-size: 0.9rem;
 }
 
+/* ═══════════════════════════════════════════
+   7. BRANCH BROWSER
+   ═══════════════════════════════════════════ */
+
 .branchBrowser {
   display: flex;
   flex-direction: column;
@@ -1125,6 +1162,10 @@ img {
   text-align: right;
   color: var(--muted-strong);
 }
+
+/* ═══════════════════════════════════════════
+   8. RESPONSIVE BREAKPOINTS
+   ═══════════════════════════════════════════ */
 
 @media (max-width: 1200px) {
   .appShell {
