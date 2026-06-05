@@ -1,14 +1,16 @@
 'use client';
 
 import { useMemo, useState, type FormEvent } from 'react';
+import toast from 'react-hot-toast';
 
 import { branchDirectory } from '@/lib/branch-directory';
+import { useAuthStore } from '@/lib/stores/auth-store';
 
 type LoginState =
   | { status: 'idle' }
   | { status: 'loading' }
-  | { status: 'success'; message: string }
-  | { status: 'error'; message: string };
+  | { status: 'error'; message: string }
+  | { status: 'success'; message: string };
 
 const demoCredentials = [
   { label: 'admin@bimbel.one', password: 'Admin123!', branch: 'HQ-01' },
@@ -22,13 +24,17 @@ export function LoginForm() {
   const [branchCode, setBranchCode] = useState('HQ-01');
   const [state, setState] = useState<LoginState>({ status: 'idle' });
 
+  const login = useAuthStore((s) => s.login);
+
   const canSubmit = useMemo(() => identifier.trim().length > 0 && password.trim().length > 0, [identifier, password]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (!canSubmit) {
-      setState({ status: 'error', message: 'Identitas dan kata sandi wajib diisi.' });
+      const msg = 'Identitas dan kata sandi wajib diisi.';
+      setState({ status: 'error', message: msg });
+      toast.error(msg);
       return;
     }
 
@@ -37,37 +43,50 @@ export function LoginForm() {
     try {
       const response = await fetch('/api/v1/auth/login', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          identifier,
-          password,
-          branchCode
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identifier, password, branchCode })
       });
 
-      const payload = (await response.json()) as
-        | { success: true; data: { user: { fullName: string }; branch: { name: string }; session: { sessionId: string } } }
-        | { success: false; error?: { message?: string } };
+      const payload = await response.json();
 
       if (!response.ok || !payload.success) {
-        setState({
-          status: 'error',
-          message: payload.success ? 'Autentikasi gagal.' : payload.error?.message ?? 'Autentikasi gagal.'
-        });
+        const msg = payload.error?.message ?? 'Autentikasi gagal.';
+        setState({ status: 'error', message: msg });
+        toast.error(msg);
+
+        if (response.status === 429) {
+          const retryAfter = response.headers.get('Retry-After');
+          if (retryAfter) {
+            toast.error(`Silakan coba lagi dalam ${retryAfter} detik.`);
+          }
+        }
         return;
       }
 
-      setState({
-        status: 'success',
-        message: `Masuk berhasil untuk ${payload.data.user.fullName} di ${payload.data.branch.name}. Sesi ${payload.data.session.sessionId} dibuat.`
-      });
+      const { user, branch, session } = payload.data;
+
+      login(
+        {
+          id: user.id,
+          fullName: user.fullName,
+          email: user.email,
+          phone: user.phone,
+          branchId: session.branchId,
+          branchName: branch.name,
+          branchCode: branch.code,
+          roleCodes: session.roleCodes,
+          permissions: session.permissions
+        },
+        session.sessionId
+      );
+
+      const msg = `Masuk berhasil. Selamat datang, ${user.fullName}!`;
+      setState({ status: 'success', message: msg });
+      toast.success(msg);
     } catch {
-      setState({
-        status: 'error',
-        message: 'Gagal menghubungi server autentikasi.'
-      });
+      const msg = 'Gagal menghubungi server autentikasi.';
+      setState({ status: 'error', message: msg });
+      toast.error(msg);
     }
   }
 

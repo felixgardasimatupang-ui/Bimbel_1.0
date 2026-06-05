@@ -3,31 +3,42 @@ import { NextResponse } from 'next/server';
 
 import { fail, ok } from '@/server/api';
 import { authenticateLogin } from '@/server/auth';
-
-type LoginBody = {
-  identifier?: string;
-  password?: string;
-  branchCode?: string;
-};
+import { checkRateLimit, getClientIp } from '@/lib/rate-limiter';
+import { loginSchema } from '@/lib/validation/schemas';
+import { validateBody } from '@/lib/validation/middleware';
 
 export async function POST(request: Request) {
-  let body: LoginBody;
+  const ip = getClientIp(request);
+  const rateLimit = checkRateLimit(`login:${ip}`);
+
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      fail('Terlalu banyak percobaan masuk. Silakan coba lagi nanti.', 'rate_limited'),
+      {
+        status: 429,
+        headers: {
+          'Retry-After': String(Math.ceil((rateLimit.resetAt - Date.now()) / 1000))
+        }
+      }
+    );
+  }
+
+  let body: unknown;
 
   try {
-    body = (await request.json()) as LoginBody;
+    body = await request.json();
   } catch {
     return NextResponse.json(fail('Payload JSON tidak valid.', 'invalid_json'), { status: 400 });
   }
 
-  if (!body.identifier || !body.password) {
-    return NextResponse.json(fail('Identitas dan kata sandi wajib diisi.', 'validation_error'), { status: 400 });
+  const validation = validateBody(loginSchema, body);
+  if (validation.error) {
+    return NextResponse.json(validation.error, { status: 400 });
   }
 
-  const result = await authenticateLogin({
-    identifier: body.identifier,
-    password: body.password,
-    branchCode: body.branchCode
-  });
+  const { identifier, password, branchCode } = validation.data!;
+
+  const result = await authenticateLogin({ identifier, password, branchCode });
 
   if (!result.ok) {
     return NextResponse.json(fail(result.error, result.code), { status: 401 });
