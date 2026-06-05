@@ -22,9 +22,21 @@ build/
 # Logs
 *.log
 
-# Misc
+# OS files
+.DS_Store
 .DS_Thumbs
 Thumbs.db
 
 # TypeScript
-tsconfig.tsbuildinfo
+*.tsbuildinfo
+
+# AI tooling
+.kilo/
+.kombai/
+
+# Testing
+.vitest/
+
+# Empty app directories
+code/
+screenshots/

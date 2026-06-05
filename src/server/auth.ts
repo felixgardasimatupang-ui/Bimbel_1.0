@@ -1,9 +1,11 @@
 import { randomUUID } from 'node:crypto';
 
 import { branches, type BranchRecord, type PermissionKey, type RoleCode, type UserRecord, users } from '@/server/catalog';
-import { recordAuditEvent } from '@/server/audit-store';
+import { recordAuditEvent, type AuditOutcome } from '@/server/audit-store';
 import { getPermissionsForRoleCodes } from '@/server/rbac';
 import { verifyPasswordAsync } from '@/server/password';
+
+const SESSION_DURATION_MS = 8 * 60 * 60 * 1000;
 
 export interface AuthenticatedSession {
   sessionId: string;
@@ -33,8 +35,11 @@ export interface LoginFailure {
   code: 'invalid_credentials' | 'branch_mismatch' | 'account_locked' | 'branch_not_found';
 }
 
+function recordAuthAudit(actor: string, action: string, outcome: AuditOutcome, branchId: string | null, detail: string) {
+  recordAuditEvent({ actor, action, resource: 'auth', branchId, outcome, detail });
+}
+
 export function sanitizeUser(user: UserRecord) {
-   // Hash kata sandi tidak pernah keluar dari batas server.
    const { passwordHash, ...safeUser } = user;
    return safeUser;
 }
@@ -49,96 +54,40 @@ export function findBranchByCode(branchCode: string) {
   return branches.find((branch) => branch.code.toLowerCase() === branchCode.trim().toLowerCase());
 }
 
+function isCrossBranchLogin(user: UserRecord, branch: BranchRecord): boolean {
+  return branch.id !== user.branchId && !user.roleCodes.includes('parent') && !user.roleCodes.includes('super_admin');
+}
+
 export async function authenticateLogin(input: LoginInput): Promise<LoginSuccess | LoginFailure> {
   const user = findUserByIdentifier(input.identifier);
 
   if (!user) {
-    recordAuditEvent({
-      actor: 'anonymous',
-      action: 'login.failed',
-      resource: 'auth',
-      branchId: null,
-      outcome: 'failure',
-      detail: 'Identitas masuk tidak dikenal.'
-    });
-
-    return {
-      ok: false,
-      error: 'Kredensial tidak valid.',
-      code: 'invalid_credentials'
-    };
+    recordAuthAudit('anonymous', 'login.failed', 'failure', null, 'Identitas masuk tidak dikenal.');
+    return { ok: false, error: 'Kredensial tidak valid.', code: 'invalid_credentials' };
   }
 
-  const branch = input.branchCode ? findBranchByCode(input.branchCode) : branches.find((entry) => entry.id === user.branchId);
+  const branch = input.branchCode
+    ? findBranchByCode(input.branchCode)
+    : branches.find((entry) => entry.id === user.branchId);
 
   if (!branch) {
-    recordAuditEvent({
-      actor: user.id,
-      action: 'login.failed',
-      resource: 'auth',
-      branchId: null,
-      outcome: 'failure',
-      detail: 'Pilihan cabang tidak valid.'
-    });
-
-    return {
-      ok: false,
-      error: 'Cabang tidak ditemukan.',
-      code: 'branch_not_found'
-    };
+    recordAuthAudit(user.id, 'login.failed', 'failure', null, 'Pilihan cabang tidak valid.');
+    return { ok: false, error: 'Cabang tidak ditemukan.', code: 'branch_not_found' };
   }
 
-  if (branch.id !== user.branchId && user.roleCodes.includes('parent') === false && user.roleCodes.includes('super_admin') === false) {
-    recordAuditEvent({
-      actor: user.id,
-      action: 'login.failed',
-      resource: 'auth',
-      branchId: branch.id,
-      outcome: 'failure',
-      detail: 'Cabang tidak sesuai saat masuk.'
-    });
-
-    return {
-      ok: false,
-      error: 'Akun tidak sesuai dengan cabang yang dipilih.',
-      code: 'branch_mismatch'
-    };
+  if (isCrossBranchLogin(user, branch)) {
+    recordAuthAudit(user.id, 'login.failed', 'failure', branch.id, 'Cabang tidak sesuai saat masuk.');
+    return { ok: false, error: 'Akun tidak sesuai dengan cabang yang dipilih.', code: 'branch_mismatch' };
   }
 
   if (user.status === 'locked') {
-    recordAuditEvent({
-      actor: user.id,
-      action: 'login.failed',
-      resource: 'auth',
-      branchId: branch.id,
-      outcome: 'failure',
-      detail: 'Akun terkunci mencoba masuk.'
-    });
-
-    return {
-      ok: false,
-      error: 'Akun sedang terkunci.',
-      code: 'account_locked'
-    };
+    recordAuthAudit(user.id, 'login.failed', 'failure', branch.id, 'Akun terkunci mencoba masuk.');
+    return { ok: false, error: 'Akun sedang terkunci.', code: 'account_locked' };
   }
 
-  const valid = await verifyPasswordAsync(input.password, user.passwordHash);
-
-  if (!valid) {
-    recordAuditEvent({
-      actor: user.id,
-      action: 'login.failed',
-      resource: 'auth',
-      branchId: branch.id,
-      outcome: 'failure',
-      detail: 'Verifikasi kata sandi gagal.'
-    });
-
-    return {
-      ok: false,
-      error: 'Kredensial tidak valid.',
-      code: 'invalid_credentials'
-    };
+  if (!(await verifyPasswordAsync(input.password, user.passwordHash))) {
+    recordAuthAudit(user.id, 'login.failed', 'failure', branch.id, 'Verifikasi kata sandi gagal.');
+    return { ok: false, error: 'Kredensial tidak valid.', code: 'invalid_credentials' };
   }
 
   const permissions = getPermissionsForRoleCodes(user.roleCodes);
@@ -149,17 +98,10 @@ export async function authenticateLogin(input: LoginInput): Promise<LoginSuccess
     branchId: branch.id,
     roleCodes: user.roleCodes,
     permissions,
-    expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 8).toISOString()
+    expiresAt: new Date(Date.now() + SESSION_DURATION_MS).toISOString()
   };
 
-  recordAuditEvent({
-    actor: user.id,
-    action: 'login.success',
-    resource: 'auth',
-    branchId: branch.id,
-    outcome: 'success',
-    detail: 'Pengguna berhasil diautentikasi.'
-  });
+  recordAuthAudit(user.id, 'login.success', 'success', branch.id, 'Pengguna berhasil diautentikasi.');
 
   return {
     ok: true,

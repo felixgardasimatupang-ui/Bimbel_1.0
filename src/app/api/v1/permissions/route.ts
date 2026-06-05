@@ -4,10 +4,6 @@ import { ok } from '@/server/api';
 import { listAllPermissions } from '@/server/rbac';
 
 export function GET() {
-  return NextResponse.json(
-    ok({
-      items: listAllPermissions(),
-      total: listAllPermissions().length
-    })
-  );
+  const items = listAllPermissions();
+  return NextResponse.json(ok({ items, total: items.length }));
 }
