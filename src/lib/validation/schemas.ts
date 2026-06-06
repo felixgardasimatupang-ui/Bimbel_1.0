@@ -9,7 +9,7 @@ export const loginSchema = z.object({
     .string({ message: 'Kata sandi wajib diisi.' })
     .min(1, 'Kata sandi wajib diisi.')
     .max(128, 'Kata sandi terlalu panjang.'),
-  branchCode: z.string().max(20, 'Kode cabang terlalu panjang.').optional()
+  branchCode: z.string().min(1, 'Kode cabang wajib diisi.').max(20, 'Kode cabang terlalu panjang.').optional()
 });
 
 export const branchQuerySchema = z.object({

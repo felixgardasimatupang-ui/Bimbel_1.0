@@ -64,5 +64,14 @@ describe('validation schemas', () => {
       });
       expect(result.success).toBe(true);
     });
+
+    it('rejects empty string branchCode', () => {
+      const result = loginSchema.safeParse({
+        identifier: 'admin@bimbel.one',
+        password: 'Admin123!',
+        branchCode: ''
+      });
+      expect(result.success).toBe(false);
+    });
   });
 });
