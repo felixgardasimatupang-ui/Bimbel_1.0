@@ -37,6 +37,14 @@ export function checkRateLimit(
   return { allowed: true, remaining: config.maxRequests - entry.count, resetAt: entry.resetAt };
 }
 
+export function getClientIp(request: Request): string {
+  const forwarded = request.headers.get('x-forwarded-for');
+  if (forwarded) {
+    return forwarded.split(',')[0].trim();
+  }
+  return 'unknown';
+}
+
 /** @internal — exposed for testing only */
 export function __getRequestCountSize(): number {
   return requestCounts.size;
