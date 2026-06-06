@@ -17,7 +17,7 @@ export const branchQuerySchema = z.object({
 });
 
 export const auditLogQuerySchema = z.object({
-  branchId: z.string().uuid('Branch ID tidak valid.').optional()
+  branchId: z.string().min(1, 'Branch ID tidak valid.').optional()
 });
 
 export type LoginInput = z.infer<typeof loginSchema>;
