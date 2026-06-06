@@ -47,7 +47,7 @@ export function sanitizeUser(user: UserRecord) {
 export function findUserByIdentifier(identifier: string) {
   const normalized = identifier.trim().toLowerCase();
 
-  return users.find((user) => user.email.toLowerCase() === normalized || user.phone === identifier.trim());
+  return users.find((user) => user.email.toLowerCase() === normalized || user.phone === normalized);
 }
 
 export function findBranchByCode(branchCode: string) {

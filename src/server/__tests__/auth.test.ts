@@ -21,6 +21,12 @@ describe('auth', () => {
       expect(user?.fullName).toBe('Nadia Putri');
     });
 
+    it('finds user by phone with leading/trailing whitespace', () => {
+      const user = findUserByIdentifier('  +62 811 1111 111  ');
+      expect(user).toBeDefined();
+      expect(user?.fullName).toBe('Nadia Putri');
+    });
+
     it('returns undefined for unknown identifier', () => {
       const user = findUserByIdentifier('unknown@email.com');
       expect(user).toBeUndefined();
