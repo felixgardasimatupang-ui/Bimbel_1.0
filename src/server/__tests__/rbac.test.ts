@@ -69,4 +69,20 @@ describe('rbac', () => {
       expect(all).toContain('students:read');
     });
   });
+
+  describe('edge cases', () => {
+    it('hasPermission with empty role array returns false', () => {
+      expect(hasPermission([], 'auth:manage')).toBe(false);
+    });
+
+    it('hasPermission with unknown role code returns false', () => {
+      expect(hasPermission(['nonexistent' as RoleCode], 'auth:manage')).toBe(false);
+    });
+
+    it('getPermissionsForRoleCodes returns deduplicated permissions', () => {
+      const perms = getPermissionsForRoleCodes(['super_admin', 'super_admin']);
+      const count = perms.filter(p => p === 'auth:manage').length;
+      expect(count).toBe(1);
+    });
+  });
 });

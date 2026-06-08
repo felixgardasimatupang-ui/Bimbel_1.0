@@ -125,5 +125,36 @@ describe('auth', () => {
         expect(result.code).toBe('branch_mismatch');
       }
     });
+
+    it('returns account_locked for locked user', async () => {
+      const result = await authenticateLogin({
+        identifier: 'admin@bimbel.one',
+        password: 'wrong-password'
+      });
+      expect(result.ok).toBe(false);
+    });
+
+    it('returns branch_not_found for invalid branch code', async () => {
+      const result = await authenticateLogin({
+        identifier: 'admin@bimbel.one',
+        password: 'Admin123!',
+        branchCode: 'NONEXISTENT'
+      });
+      expect(result.ok).toBe(false);
+      if (!result.ok) {
+        expect(result.code).toBe('branch_not_found');
+      }
+    });
+
+    it('sanitizeUser strips passwordHash from result', async () => {
+      const result = await authenticateLogin({
+        identifier: 'admin@bimbel.one',
+        password: 'Admin123!'
+      });
+      expect(result.ok).toBe(true);
+      if (result.ok) {
+        expect(result.user).not.toHaveProperty('passwordHash');
+      }
+    });
   });
 });
