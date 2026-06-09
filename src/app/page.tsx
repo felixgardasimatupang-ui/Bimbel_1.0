@@ -22,15 +22,15 @@ export default function HomePage() {
       activeSlug={defaultScreen.slug}
       currentScreen={defaultScreen}
       title="Bimbel One Platform"
-      description="Titik masuk framework berbasis Next.js untuk menampilkan seluruh layar utama secara terstruktur."
+      description="Titik masuk untuk menampilkan seluruh layar utama Bimbel One Platform."
     >
       <section className="introPanel">
         <div className="introCopy">
-          <p className="eyebrow">Pratinjau framework</p>
-          <h1 className="heroTitle">Dasbor Utama sebagai titik masuk, tanpa aset PNG.</h1>
+          <p className="eyebrow">Selamat datang</p>
+          <h1 className="heroTitle">Dasbor Utama Bimbel One Platform</h1>
           <p className="heroLead">
-            Struktur ini mengganti file HTML statis menjadi komponen React yang lebih mudah dibaca,
-            lebih mudah dirawat, dan tetap menjaga fitur inti setiap layar.
+            Kelola seluruh operasional bimbel Anda dari satu tempat: keuangan, jadwal, absensi,
+            LMS, CRM, notifikasi, dan banyak lagi.
           </p>
           <div className="heroActions">
             <Link className="metaPill" href="/login">
@@ -52,19 +52,19 @@ export default function HomePage() {
           <div className="statCard">
             <span className="statLabel">Layar</span>
             <strong>16</strong>
-            <span className="statNote">Semua layar penting dipetakan ulang ke rute Next.js.</span>
+            <span className="statNote">Semua fitur operasional tersedia dari satu dasbor.</span>
           </div>
           <div className="statCard">
-            <span className="statLabel">Arsitektur</span>
-            <strong>App Router</strong>
-            <span className="statNote">Komponen server-first dengan struktur file yang jelas.</span>
+            <span className="statLabel">Kinerja</span>
+            <strong>Cepat</strong>
+            <span className="statNote">Akses instan ke setiap layar tanpa memuat ulang halaman.</span>
           </div>
           <div className="statCard statCardAction">
             <span className="statLabel">Navigasi</span>
-            <strong>Indeks rute</strong>
-            <span className="statNote">Buka seluruh layar dari halaman indeks yang terstruktur.</span>
+            <strong>Daftar layar</strong>
+            <span className="statNote">Jelajahi seluruh layar yang tersedia untuk operasional harian.</span>
             <Link className="primaryButton" href="/screens">
-              Buka indeks layar
+              Buka daftar layar
             </Link>
           </div>
         </div>

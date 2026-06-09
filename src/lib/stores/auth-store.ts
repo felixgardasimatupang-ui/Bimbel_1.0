@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 export type AuthenticatedUser = {
   id: string;
@@ -23,26 +24,38 @@ export type AuthState = {
   hasRole: (role: string) => boolean;
 };
 
-export const useAuthStore = create<AuthState>((set, get) => ({
-  user: null,
-  sessionId: null,
-  isAuthenticated: false,
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set, get) => ({
+      user: null,
+      sessionId: null,
+      isAuthenticated: false,
 
-  login: (user, sessionId) =>
-    set({ user, sessionId, isAuthenticated: true }),
+      login: (user, sessionId) =>
+        set({ user, sessionId, isAuthenticated: true }),
 
-  logout: () =>
-    set({ user: null, sessionId: null, isAuthenticated: false }),
+      logout: () =>
+        set({ user: null, sessionId: null, isAuthenticated: false }),
 
-  hasPermission: (permission) => {
-    const { user } = get();
-    if (!user) return false;
-    return user.permissions.includes(permission);
-  },
+      hasPermission: (permission) => {
+        const { user } = get();
+        if (!user) return false;
+        return user.permissions.includes(permission);
+      },
 
-  hasRole: (role) => {
-    const { user } = get();
-    if (!user) return false;
-    return user.roleCodes.includes(role);
-  }
-}));
+      hasRole: (role) => {
+        const { user } = get();
+        if (!user) return false;
+        return user.roleCodes.includes(role);
+      },
+    }),
+    {
+      name: 'bimbel-auth',
+      partialize: (state) => ({
+        user: state.user,
+        sessionId: state.sessionId,
+        isAuthenticated: state.isAuthenticated,
+      }),
+    }
+  )
+);

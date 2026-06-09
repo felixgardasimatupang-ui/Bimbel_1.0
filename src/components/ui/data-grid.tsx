@@ -51,21 +51,10 @@ export function DataGrid<T extends Record<string, unknown>>({
         <div className="filterBar" style={{ marginBottom: '14px' }}>
           <input
             type="text"
-            className="field"
+            className="field searchInput"
             value={search}
             onChange={(e) => { setSearch(e.target.value); setPage(0); }}
             placeholder={searchPlaceholder}
-            style={{
-              minHeight: '42px',
-              borderRadius: '14px',
-              border: '1px solid var(--border)',
-              background: 'rgba(255, 255, 255, 0.03)',
-              color: 'var(--text)',
-              padding: '0 14px',
-              outline: 'none',
-              width: '100%',
-              maxWidth: '340px'
-            }}
           />
         </div>
       )}
@@ -84,7 +73,7 @@ export function DataGrid<T extends Record<string, unknown>>({
           <tbody>
             {paginated.length === 0 ? (
               <tr>
-                <td colSpan={columns.length} style={{ textAlign: 'center', padding: '32px', color: 'var(--muted)' }}>
+                <td colSpan={columns.length} className="emptyCell">
                   Tidak ada data ditemukan.
                 </td>
               </tr>
@@ -108,8 +97,8 @@ export function DataGrid<T extends Record<string, unknown>>({
       </div>
 
       {totalPages > 1 && (
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '14px' }}>
-          <span style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>
+        <div className="gridFooter">
+          <span className="gridInfo">
             {safePage * pageSize + 1}–{Math.min((safePage + 1) * pageSize, filtered.length)} dari {filtered.length}
           </span>
           <div className="filterBar">

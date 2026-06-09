@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { screens, screenMap, defaultScreenSlug } from '@/lib/screens';
 
 describe('screens', () => {
-  it('contains exactly 16 screens', () => {
-    expect(screens).toHaveLength(16);
+  it('contains exactly 11 screens', () => {
+    expect(screens).toHaveLength(11);
   });
 
   it('each screen has required fields', () => {
@@ -36,14 +36,20 @@ describe('screens', () => {
     }
   });
 
-  it('defaultScreenSlug is 16_dashboard_utama', () => {
-    expect(defaultScreenSlug).toBe('16_dashboard_utama');
+  it('defaultScreenSlug is 10_dashboard_utama', () => {
+    expect(defaultScreenSlug).toBe('10_dashboard_utama');
   });
 
   it('dashboard screen has kind dashboard', () => {
     const dashboard = screens.find(s => s.kind === 'dashboard');
     expect(dashboard).toBeDefined();
-    expect(dashboard?.slug).toBe('16_dashboard_utama');
+    expect(dashboard?.slug).toBe('10_dashboard_utama');
+  });
+
+  it('role-management screen exists with kind role-management', () => {
+    const rm = screens.find(s => s.kind === 'role-management');
+    expect(rm).toBeDefined();
+    expect(rm?.slug).toBe('11_manajemen_role');
   });
 
   it('all screen kinds are unique', () => {

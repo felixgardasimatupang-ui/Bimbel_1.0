@@ -1,31 +1,37 @@
-import { MetricCard, SectionCard, DataTable, SimpleList, Badge } from './shared';
+'use client';
+
+import { CrudPanel } from './crud';
+import { Badge } from './shared';
 
 export function AttendancePanel() {
-  const rows = [
-    { key: 'Ahmad', cells: [<span key="a">Ahmad Reza</span>, <span key="b">08:02</span>, <Badge key="c" tone="success">Hadir</Badge>, <span key="d">QR + GPS</span>] },
-    { key: 'Siti', cells: [<span key="a">Siti Aminah</span>, <span key="b">08:10</span>, <Badge key="c" tone="warning">Terlambat</Badge>, <span key="d">QR saja</span>] },
-    { key: 'Budi', cells: [<span key="a">Budi Santoso</span>, <span key="b">--</span>, <Badge key="c" tone="danger">Tidak hadir</Badge>, <span key="d">Tanpa check-in</span>] }
-  ];
-
   return (
-    <section className="screenPanel">
-      <div className="metricGrid metricGrid3">
-        <MetricCard label="Hadir hari ini" value="284" note="Siswa dan staf yang sudah check-in" tone="success" />
-        <MetricCard label="Terlambat check-in" value="11" note="Perlu tindak lanjut via notifikasi" tone="warning" />
-        <MetricCard label="Rekaman hilang" value="4" note="Data absensi masih menunggu validasi" tone="danger" />
-      </div>
-      <div className="twoColLayout">
-        <SectionCard title="Log kehadiran" lead="Baris data terbaru dari sistem check-in.">
-          <DataTable columns={[{ label: 'Nama' }, { label: 'Waktu' }, { label: 'Status' }, { label: 'Metode', align: 'right' }]} rows={rows} />
-        </SectionCard>
-        <SectionCard title="Kebijakan validasi" lead="Aturan yang dipakai untuk memverifikasi kehadiran.">
-          <SimpleList items={[
-            { title: 'Scan QR wajib', meta: 'Setiap check-in harus menghasilkan event QR.', tone: 'info' as const, extra: 'Aktif' },
-            { title: 'Konfirmasi GPS', meta: 'Dipakai untuk cabang yang mengaktifkan lokasi.', tone: 'success' as const, extra: 'Aktif' },
-            { title: 'Log pengecualian', meta: 'Absensi manual harus memiliki alasan.', tone: 'warning' as const, extra: 'Tinjau' }
-          ]} />
-        </SectionCard>
-      </div>
-    </section>
+    <CrudPanel
+      title="Sistem Absensi"
+      lead="Status kehadiran siswa dan staf dengan validasi yang jelas."
+      eyebrow="Operations"
+      apiPath="attendance"
+      emptyState="Belum ada data absensi. Klik + Tambah untuk mencatat kehadiran."
+      columns={[
+        { key: 'studentName', label: 'Nama', render: (item) => <strong>{item.studentName as string}</strong> },
+        { key: 'date', label: 'Tanggal', render: (item) => <span>{item.date as string}</span> },
+        { key: 'time', label: 'Waktu', render: (item) => <span>{item.time as string}</span> },
+        { key: 'status', label: 'Status', render: (item) => {
+          const s = item.status as string;
+          return <Badge tone={s === 'present' ? 'success' : s === 'late' ? 'warning' : 'danger'}>{s === 'present' ? 'Hadir' : s === 'late' ? 'Terlambat' : 'Tidak hadir'}</Badge>;
+        }},
+        { key: 'method', label: 'Metode', align: 'right', render: (item) => <span>{item.method as string}</span> },
+      ]}
+      fields={[
+        { key: 'studentName', label: 'Nama Siswa/Staf', type: 'text', required: true },
+        { key: 'time', label: 'Waktu (contoh: 08:00)', type: 'text', required: true },
+        { key: 'status', label: 'Status', type: 'select', required: true, options: [
+          { label: 'Hadir', value: 'present' },
+          { label: 'Terlambat', value: 'late' },
+          { label: 'Tidak hadir', value: 'absent' },
+        ]},
+        { key: 'method', label: 'Metode Check-in', type: 'text', required: true },
+        { key: 'date', label: 'Tanggal (YYYY-MM-DD)', type: 'text', required: true },
+      ]}
+    />
   );
 }

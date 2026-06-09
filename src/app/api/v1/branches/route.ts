@@ -2,9 +2,13 @@ import { NextResponse } from 'next/server';
 
 import { ok } from '@/server/api';
 import { branches } from '@/server/catalog';
+import { requireAuth } from '@/server/session-store';
 import { branchQuerySchema } from '@/lib/validation/schemas';
 
-export function GET(request: Request) {
+export async function GET(request: Request) {
+  const auth = await requireAuth(request);
+  if (auth instanceof Response) return auth;
+
   const url = new URL(request.url);
   const query = branchQuerySchema.safeParse(Object.fromEntries(url.searchParams));
 

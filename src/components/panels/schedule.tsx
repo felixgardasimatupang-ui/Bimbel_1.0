@@ -1,53 +1,41 @@
-import { MetricCard, SectionCard, CardGrid, SimpleList } from './shared';
+'use client';
+
+import { CrudPanel } from './crud';
+import { Badge } from './shared';
+
+const DAYS = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+
+function dayColor(day: string) {
+  const map: Record<string, 'info' | 'warning' | 'success' | 'danger' | 'neutral'> = {
+    Senin: 'info', Selasa: 'warning', Rabu: 'success', Kamis: 'danger', Jumat: 'neutral',
+  };
+  return map[day] ?? 'neutral';
+}
 
 export function SchedulePanel() {
-  const schedule = [
-    ['14:00', 'Matematika Kelas 10', 'Fisika Kelas 12', '', 'Biologi Kelas 11', ''],
-    ['16:00', '', 'Kimia Kelas 12', 'Matematika Kelas 9', '', 'Bahasa Inggris Kelas 10'],
-    ['18:00', 'Klub membaca', '', 'Klinik esai', 'Tinjauan mentor', '']
-  ];
-
   return (
-    <section className="screenPanel">
-      <div className="metricGrid metricGrid3">
-        <MetricCard label="Kelas hari ini" value="18" note="Slot aktif pada semua cabang" tone="info" />
-        <MetricCard label="Bentrok ruang" value="0" note="Tidak ada bentrok jadwal yang aktif" tone="success" />
-        <MetricCard label="Cakupan tutor" value="96%" note="Cakupan tutor untuk minggu ini" tone="warning" />
-      </div>
-      <SectionCard title="Jadwal kelas mingguan" lead="Tampilan ringkas untuk memeriksa slot, tutor, dan ruang.">
-        <div className="scheduleGrid">
-          <div className="scheduleHeadRow">
-            <span /><span>Sen 12</span><span className="isActive">Sel 13</span><span>Rab 14</span><span>Kam 15</span><span>Jum 16</span>
-          </div>
-          {schedule.map((row) => (
-            <div key={row[0]} className="scheduleRow">
-              <span className="scheduleTime">{row[0]}</span>
-              {row.slice(1).map((cell, index) => (
-                <div key={`${row[0]}-${index}`} className={cell ? 'scheduleSlot scheduleSlotFilled' : 'scheduleSlot'}>
-                  {cell ? <strong>{cell}</strong> : null}
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
-      </SectionCard>
-      <div className="twoColLayout">
-        <SectionCard title="Kelas berikutnya" lead="Agenda berikutnya yang paling dekat.">
-          <CardGrid columns={2} items={[
-            { badge: '14:30', title: 'Fisika Kelas 12', meta: 'Ruang C, Ibu Siti', tone: 'info' },
-            { badge: '15:45', title: 'Kimia Kelas 11', meta: 'Lab 1, Pak Yanto', tone: 'warning' },
-            { badge: '17:00', title: 'Matematika Kelas 9', meta: 'Ruang D, Pak Budi', tone: 'success' },
-            { badge: '18:30', title: 'Klinik Bahasa Inggris', meta: 'Ruang A, Bu Jane', tone: 'info' }
-          ]} />
-        </SectionCard>
-        <SectionCard title="Alokasi ruangan" lead="Ketersediaan dan pemakaian ruangan.">
-          <SimpleList items={[
-            { title: 'Ruang A', meta: '2 kelas terjadwal', tone: 'success' as const, extra: 'Tersedia' },
-            { title: 'Ruang B', meta: '1 kelas diblokir untuk perawatan', tone: 'warning' as const, extra: 'Perawatan' },
-            { title: 'Lab 1', meta: 'Penuh untuk jalur sains', tone: 'danger' as const, extra: 'Penuh' }
-          ]} />
-        </SectionCard>
-      </div>
-    </section>
+    <CrudPanel
+      title="Jadwal Akademik"
+      lead="Ruang, tutor, dan slot waktu dalam tampilan terstruktur."
+      eyebrow="Academic Delivery"
+      apiPath="classes"
+      emptyState="Belum ada jadwal kelas. Klik + Tambah untuk menambah jadwal baru."
+      columns={[
+        { key: 'day', label: 'Hari', render: (item) => <Badge tone={dayColor(item.day as string)}>{item.day as string}</Badge> },
+        { key: 'time', label: 'Jam', render: (item) => <strong>{item.time as string}</strong> },
+        { key: 'subject', label: 'Mata Pelajaran', render: (item) => <span>{item.subject as string}</span> },
+        { key: 'className', label: 'Kelas', render: (item) => <span>{item.className as string}</span> },
+        { key: 'room', label: 'Ruangan', render: (item) => <span>{item.room as string}</span> },
+        { key: 'tutor', label: 'Tutor', align: 'right', render: (item) => <span>{item.tutor as string}</span> },
+      ]}
+      fields={[
+        { key: 'subject', label: 'Mata Pelajaran', type: 'text', required: true },
+        { key: 'className', label: 'Kelas', type: 'text', required: true },
+        { key: 'day', label: 'Hari', type: 'select', required: true, options: DAYS.map(d => ({ label: d, value: d })) },
+        { key: 'time', label: 'Jam (contoh: 14:00)', type: 'text', required: true },
+        { key: 'room', label: 'Ruangan', type: 'text', required: true },
+        { key: 'tutor', label: 'Nama Tutor', type: 'text', required: true },
+      ]}
+    />
   );
 }

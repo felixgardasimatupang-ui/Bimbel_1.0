@@ -8,13 +8,8 @@ export type ScreenKind =
   | 'material'
   | 'crm'
   | 'progress'
-  | 'helpdesk'
-  | 'ticket'
   | 'chat'
-  | 'notification-compose'
-  | 'notification-template'
-  | 'broadcast'
-  | 'whatsapp';
+  | 'role-management';
 
 export type ScreenSummary = {
   slug: string;
@@ -91,71 +86,31 @@ export const screens: ScreenSummary[] = [
     kind: 'progress'
   },
   {
-    slug: '09_dashboard_helpdesk_ticketing',
+    slug: '09_chat_realtime_helpdesk',
     index: '09',
-    title: 'Dashboard Helpdesk',
-    subtitle: 'Pantau SLA, antrian tiket, dan status penyelesaian layanan.',
-    category: 'Support',
-    kind: 'helpdesk'
-  },
-  {
-    slug: '10_detail_tiket_helpdesk',
-    index: '10',
-    title: 'Detail Tiket Helpdesk',
-    subtitle: 'Riwayat percakapan, metadata tiket, dan tindakan penanganan.',
-    category: 'Support',
-    kind: 'ticket'
-  },
-  {
-    slug: '11_chat_realtime_helpdesk',
-    index: '11',
     title: 'Chat Realtime Helpdesk',
     subtitle: 'Percakapan langsung dengan peserta didik atau orang tua.',
     category: 'Support',
     kind: 'chat'
   },
   {
-    slug: '12_buat_notifikasi_baru',
-    index: '12',
-    title: 'Buat Notifikasi Baru',
-    subtitle: 'Komposisi pesan, segmentasi penerima, dan jadwal pengiriman.',
-    category: 'Automation',
-    kind: 'notification-compose'
-  },
-  {
-    slug: '13_template_notifikasi',
-    index: '13',
-    title: 'Template Notifikasi',
-    subtitle: 'Koleksi template yang dapat dipakai ulang dan dikelola versioned.',
-    category: 'Automation',
-    kind: 'notification-template'
-  },
-  {
-    slug: '14_dashboard_notifikasi_massal',
-    index: '14',
-    title: 'Dashboard Notifikasi Massal',
-    subtitle: 'Status kampanye notifikasi, delivery, dan insight pengiriman.',
-    category: 'Automation',
-    kind: 'broadcast'
-  },
-  {
-    slug: '15_detail_pengaturan_whatsapp',
-    index: '15',
-    title: 'Detail Pengaturan WhatsApp',
-    subtitle: 'Konfigurasi gateway, koneksi perangkat, dan profil pengirim.',
-    category: 'Automation',
-    kind: 'whatsapp'
-  },
-  {
-    slug: '16_dashboard_utama',
-    index: '16',
+    slug: '10_dashboard_utama',
+    index: '10',
     title: 'Dashboard Utama',
     subtitle: 'Ringkasan operasional lintas cabang untuk keputusan harian.',
     category: 'Foundation',
     kind: 'dashboard'
+  },
+  {
+    slug: '11_manajemen_role',
+    index: '11',
+    title: 'Manajemen Role',
+    subtitle: 'Kelola role pengguna, hak akses, dan batasan wewenang.',
+    category: 'Foundation',
+    kind: 'role-management'
   }
 ];
 
 export const screenMap = new Map(screens.map((screen) => [screen.slug, screen]));
 
-export const defaultScreenSlug = '16_dashboard_utama';
+export const defaultScreenSlug = '10_dashboard_utama';

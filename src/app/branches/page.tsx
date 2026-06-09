@@ -7,7 +7,7 @@ import { branchDirectory } from '@/lib/branch-directory';
 
 export const metadata: Metadata = {
   title: 'Cabang | Bimbel One Platform',
-  description: 'Pemilih cabang untuk memastikan data dan scope tetap sadar cabang.'
+  description: 'Pilih cabang untuk memulai operasional.'
 };
 
 export default function BranchesPage() {
@@ -15,7 +15,7 @@ export default function BranchesPage() {
     <AppShell
       activeSlug={undefined}
       title="Cabang"
-      description="Pemilih cabang yang memperjelas isolasi data dan scope tenant."
+      description="Pilih cabang aktif untuk memulai operasional."
     >
       <section className="screenPanel">
         <div className="featureHero">

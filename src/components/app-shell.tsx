@@ -12,13 +12,7 @@ type AppShellProps = {
   currentScreen?: ScreenSummary;
 };
 
-export function AppShell({
-  activeSlug,
-  title,
-  description,
-  children,
-  currentScreen
-}: AppShellProps) {
+export function AppShell({ activeSlug, title, description, children, currentScreen }: AppShellProps) {
   return (
     <div className="appShell">
       <aside className="sidebar" aria-label="Navigasi layar">
@@ -28,8 +22,8 @@ export function AppShell({
           </div>
           <div>
             <p className="brandKicker">Bimbel One Platform</p>
-            <h1 className="brandTitle">Ruang kerja terstruktur</h1>
-            <p className="brandText">Next.js App Router, komponen React, dan struktur yang mudah dibaca.</p>
+            <h1 className="brandTitle">Bimbel One Platform</h1>
+            <p className="brandText">Solusi manajemen bimbel yang lengkap dan terintegrasi.</p>
           </div>
         </div>
 
@@ -43,7 +37,6 @@ export function AppShell({
                 className={joinClasses('navItem', screen.slug === activeSlug && 'navItemActive')}
                 aria-current={screen.slug === activeSlug ? 'page' : undefined}
               >
-                <span className="navIndex">{screen.index}</span>
                 <span className="navText">
                   <strong>{screen.title}</strong>
                   <span>{screen.category}</span>
@@ -57,7 +50,7 @@ export function AppShell({
       <div className="workspace">
         <header className="topbar">
           <div>
-            <p className="eyebrow">Monolit modular</p>
+            <p className="eyebrow">Bimbel One Platform</p>
             <h2 className="pageTitle">{title}</h2>
             <p className="pageLead">{description}</p>
           </div>
@@ -72,9 +65,8 @@ export function AppShell({
             <Link className="metaPill" href="/production">
               Produksi
             </Link>
-            <span className="metaPill">Sadar cabang</span>
-            <span className="metaPill">React mudah dibaca manusia</span>
-            {currentScreen ? <span className="metaPill">Layar {currentScreen.index}</span> : null}
+            <span className="metaPill">Multi-cabang</span>
+            <span className="metaPill">Platform terpadu</span>
           </div>
         </header>
 

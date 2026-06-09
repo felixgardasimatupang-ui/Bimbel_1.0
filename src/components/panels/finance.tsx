@@ -1,35 +1,37 @@
-import { MetricCard, SectionCard, DataTable, SimpleList, Badge } from './shared';
+'use client';
+
+import { CrudPanel } from './crud';
+import { Badge } from './shared';
 
 export function FinancePanel() {
-  const metrics = [
-    { label: 'Piutang tertunda', value: 'Rp 45.200.000', note: '12 invoice melewati jatuh tempo', tone: 'danger' as const },
-    { label: 'Terkumpul bulan ini', value: 'Rp 128.500.000', note: '+15% dari bulan lalu', tone: 'success' as const },
-    { label: 'Pendapatan mendatang', value: 'Rp 15.000.000', note: 'Masuk dalam 7 hari ke depan', tone: 'info' as const }
-  ];
-
-  const invoices = [
-    { key: '#INV-2023-089', cells: [<span key="a">#INV-2023-089</span>, <span key="b">Budi Santoso</span>, <span key="c">Rp 2.500.000</span>, <Badge key="d" tone="danger">Lewat tempo</Badge>] },
-    { key: '#INV-2023-090', cells: [<span key="a">#INV-2023-090</span>, <span key="b">Siti Aminah</span>, <span key="c">Rp 1.800.000</span>, <Badge key="d" tone="warning">Sebagian</Badge>] },
-    { key: '#INV-2023-091', cells: [<span key="a">#INV-2023-091</span>, <span key="b">Agus Pratama</span>, <span key="c">Rp 2.200.000</span>, <Badge key="d" tone="success">Lunas</Badge>] }
-  ];
-
   return (
-    <section className="screenPanel">
-      <div className="metricGrid metricGrid3">
-        {metrics.map((metric) => (<MetricCard key={metric.label} {...metric} />))}
-      </div>
-      <div className="twoColLayout">
-        <SectionCard title="Invoice aktif" lead="Daftar invoice yang perlu ditinjau oleh finance team.">
-          <DataTable columns={[{ label: 'Invoice' }, { label: 'Siswa' }, { label: 'Nominal' }, { label: 'Status', align: 'right' }]} rows={invoices} />
-        </SectionCard>
-        <SectionCard title="Aksi penagihan" lead="Langkah cepat untuk menutup selisih pembayaran.">
-          <SimpleList items={[
-            { title: 'Kirim pengingat WhatsApp', meta: 'Otomatis untuk invoice yang lewat jatuh tempo.', tone: 'info' as const, extra: 'Siap' },
-            { title: 'Ekspor rekonsiliasi', meta: 'Unduh data pembayaran untuk audit.', tone: 'success' as const, extra: 'CSV' },
-            { title: 'Tinjau voucher diskon', meta: 'Validasi voucher yang dipakai pada batch ini.', tone: 'warning' as const, extra: 'Tinjau' }
-          ]} />
-        </SectionCard>
-      </div>
-    </section>
+    <CrudPanel
+      title="Penagihan & Keuangan"
+      lead="Kontrol invoice, pembayaran, dan posisi piutang secara ringkas."
+      eyebrow="Monetization"
+      apiPath="invoices"
+      emptyState="Belum ada data invoice. Klik + Tambah untuk membuat invoice baru."
+      columns={[
+        { key: 'invoiceNo', label: 'Invoice', render: (item) => <strong>{item.invoiceNo as string}</strong> },
+        { key: 'studentName', label: 'Siswa', render: (item) => <span>{item.studentName as string}</span> },
+        { key: 'amount', label: 'Nominal', render: (item) => <span>Rp {(item.amount as number).toLocaleString('id-ID')}</span> },
+        { key: 'status', label: 'Status', align: 'right', render: (item) => {
+          const s = item.status as string;
+          return <Badge tone={s === 'paid' ? 'success' : s === 'partial' ? 'warning' : 'danger'}>{s === 'paid' ? 'Lunas' : s === 'partial' ? 'Sebagian' : 'Tertunda'}</Badge>;
+        }},
+        { key: 'dueDate', label: 'Jatuh Tempo', align: 'right', render: (item) => <span>{item.dueDate as string}</span> },
+      ]}
+      fields={[
+        { key: 'invoiceNo', label: 'Nomor Invoice', type: 'text', required: true },
+        { key: 'studentName', label: 'Nama Siswa', type: 'text', required: true },
+        { key: 'amount', label: 'Jumlah (Rp)', type: 'number', required: true },
+        { key: 'status', label: 'Status', type: 'select', required: true, options: [
+          { label: 'Tertunda', value: 'pending' },
+          { label: 'Sebagian', value: 'partial' },
+          { label: 'Lunas', value: 'paid' },
+        ]},
+        { key: 'dueDate', label: 'Jatuh Tempo', type: 'text', required: true },
+      ]}
+    />
   );
 }

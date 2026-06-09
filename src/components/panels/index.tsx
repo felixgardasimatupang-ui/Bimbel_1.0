@@ -8,13 +8,8 @@ import { LmsPanel } from './lms';
 import { MaterialPanel } from './material';
 import { CrmPanel } from './crm';
 import { ProgressPanel } from './progress';
-import { HelpdeskPanel } from './helpdesk';
-import { TicketPanel } from './ticket';
 import { ChatPanel } from './chat';
-import { NotificationComposePanel } from './notification-compose';
-import { TemplatePanel } from './template';
-import { BroadcastPanel } from './broadcast';
-import { WhatsAppPanel } from './whatsapp';
+import { RoleManagementPanel } from './role-management';
 
 export function ScreenPanel({ screen }: { screen: ScreenSummary }) {
   switch (screen.kind) {
@@ -36,20 +31,10 @@ export function ScreenPanel({ screen }: { screen: ScreenSummary }) {
       return <CrmPanel />;
     case 'progress':
       return <ProgressPanel />;
-    case 'helpdesk':
-      return <HelpdeskPanel />;
-    case 'ticket':
-      return <TicketPanel />;
     case 'chat':
       return <ChatPanel />;
-    case 'notification-compose':
-      return <NotificationComposePanel />;
-    case 'notification-template':
-      return <TemplatePanel />;
-    case 'broadcast':
-      return <BroadcastPanel />;
-    case 'whatsapp':
-      return <WhatsAppPanel />;
+    case 'role-management':
+      return <RoleManagementPanel />;
     default:
       return null;
   }
@@ -64,13 +49,10 @@ export { LmsPanel } from './lms';
 export { MaterialPanel } from './material';
 export { CrmPanel } from './crm';
 export { ProgressPanel } from './progress';
-export { HelpdeskPanel } from './helpdesk';
-export { TicketPanel } from './ticket';
 export { ChatPanel } from './chat';
-export { NotificationComposePanel } from './notification-compose';
-export { TemplatePanel } from './template';
-export { BroadcastPanel } from './broadcast';
-export { WhatsAppPanel } from './whatsapp';
+export { RoleManagementPanel } from './role-management';
 
+export { CrudPanel } from './crud';
+export type { FieldDef } from './crud';
 export type { Tone } from './shared';
 export { MetricCard, SectionCard, Badge, DataTable, SimpleList, ProgressBars, Timeline, CardGrid } from './shared';

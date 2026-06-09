@@ -8,7 +8,7 @@ const defaultScreen = screenMap.get(defaultScreenSlug);
 
 export const metadata: Metadata = {
   title: 'Semua Layar | Bimbel One Platform',
-  description: 'Indeks rute untuk membuka seluruh layar utama Bimbel One Platform.'
+  description: 'Daftar layar utama Bimbel One Platform untuk operasional harian.'
 };
 
 export default function ScreensIndexPage() {
@@ -22,14 +22,14 @@ export default function ScreensIndexPage() {
       <section className="screenPanel">
         <div className="featureHero">
           <div>
-            <p className="eyebrow">Indeks rute</p>
-            <h2 className="sectionTitle">Kumpulan layar utama</h2>
+            <p className="eyebrow">Navigasi</p>
+            <h2 className="sectionTitle">Semua layar</h2>
             <p className="sectionLead">
-              Semua layar dipetakan sebagai rute Next.js agar mudah ditelusuri, diuji, dan dipelihara.
+              Jelajahi seluruh layar yang tersedia untuk mengelola operasional bimbel Anda.
             </p>
           </div>
           <div className="heroActions">
-            <span className="metaPill">16 rute aktif</span>
+            <span className="metaPill">16 layar tersedia</span>
             <span className="metaPill">Sadar cabang</span>
             <Link className="metaPill" href="/login">
               Masuk
@@ -46,7 +46,6 @@ export default function ScreensIndexPage() {
         <div className="cardGrid cardGrid4">
           {screens.map((screen) => (
             <Link key={screen.slug} className="miniCard routeCard" href={`/screens/${screen.slug}`}>
-              <span className="badge toneInfo">{screen.index}</span>
               <strong>{screen.title}</strong>
               <p>{screen.subtitle}</p>
             </Link>

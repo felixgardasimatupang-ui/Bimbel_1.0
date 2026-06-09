@@ -17,10 +17,10 @@ export function toneClass(tone: Tone = 'neutral') {
   }
 }
 
-export function MetricCard({ label, value, note, tone = 'neutral' }: { label: string; value: string; note: string; tone?: Tone }) {
+export function MetricCard({ label, value, note, tone = 'neutral', emoji }: { label: string; value: string; note: string; tone?: Tone; emoji?: string }) {
   return (
     <article className="metricCard">
-      <span className="metricLabel">{label}</span>
+      <span className="metricLabel">{emoji ? <>{emoji} </> : null}{label}</span>
       <strong className={`metricValue ${toneClass(tone)}`}>{value}</strong>
       <p className="metricNote">{note}</p>
     </article>

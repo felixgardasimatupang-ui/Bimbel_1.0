@@ -15,7 +15,8 @@ export type PermissionResource =
   | 'helpdesk'
   | 'inventory'
   | 'integrations'
-  | 'audit';
+  | 'audit'
+  | 'roles';
 export type PermissionAction = 'read' | 'create' | 'update' | 'delete' | 'approve' | 'export' | 'manage';
 export type PermissionKey = `${PermissionResource}:${PermissionAction}`;
 
@@ -57,7 +58,8 @@ export const roles: RoleRecord[] = [
       'helpdesk:manage',
       'inventory:manage',
       'integrations:manage',
-      'audit:read'
+      'audit:read',
+      'roles:manage'
     ]
   },
   {
@@ -74,7 +76,8 @@ export const roles: RoleRecord[] = [
       'notifications:manage',
       'helpdesk:manage',
       'inventory:manage',
-      'audit:read'
+      'audit:read',
+      'roles:read'
     ]
   },
   {
@@ -99,63 +102,70 @@ export const roles: RoleRecord[] = [
   }
 ];
 
-export const users: UserRecord[] = [
-  {
-    id: 'user-admin',
-    branchId: 'branch-pusat',
-    fullName: 'Nadia Putri',
-    email: 'admin@bimbel.one',
-    phone: '+62 811 1111 111',
-    passwordHash: hashPassword('Admin123!'),
-    status: 'active',
-    roleCodes: ['super_admin'],
-    isMfaRequired: true
-  },
-  {
-    id: 'user-finance',
-    branchId: 'branch-pusat',
-    fullName: 'Rizky Pratama',
-    email: 'finance@bimbel.one',
-    phone: '+62 812 2222 222',
-    passwordHash: hashPassword('Finance123!'),
-    status: 'active',
-    roleCodes: ['finance'],
-    isMfaRequired: true
-  },
-  {
-    id: 'user-tutor',
-    branchId: 'branch-bandung',
-    fullName: 'Ayu Santika',
-    email: 'ayu@bimbel.one',
-    phone: '+62 813 3333 333',
-    passwordHash: hashPassword('Tutor123!'),
-    status: 'active',
-    roleCodes: ['tutor'],
-    isMfaRequired: false
-  },
-  {
-    id: 'user-branch-admin',
-    branchId: 'branch-jkt-selatan',
-    fullName: 'Budi Wicaksono',
-    email: 'budi@bimbel.one',
-    phone: '+62 814 4444 444',
-    passwordHash: hashPassword('Branch123!'),
-    status: 'active',
-    roleCodes: ['branch_admin'],
-    isMfaRequired: true
-  },
-  {
-    id: 'user-support',
-    branchId: 'branch-surabaya',
-    fullName: 'Siti Aminah',
-    email: 'support@bimbel.one',
-    phone: '+62 815 5555 555',
-    passwordHash: hashPassword('Support123!'),
-    status: 'active',
-    roleCodes: ['support'],
-    isMfaRequired: false
+let _users: UserRecord[] | null = null;
+
+export function getUsers(): UserRecord[] {
+  if (!_users) {
+    _users = [
+      {
+        id: 'user-admin',
+        branchId: 'branch-pusat',
+        fullName: 'Nadia Putri',
+        email: 'admin@bimbel.one',
+        phone: '+62 811 1111 111',
+        passwordHash: hashPassword('Admin123!'),
+        status: 'active',
+        roleCodes: ['super_admin'],
+        isMfaRequired: true
+      },
+      {
+        id: 'user-finance',
+        branchId: 'branch-pusat',
+        fullName: 'Rizky Pratama',
+        email: 'finance@bimbel.one',
+        phone: '+62 812 2222 222',
+        passwordHash: hashPassword('Finance123!'),
+        status: 'active',
+        roleCodes: ['finance'],
+        isMfaRequired: true
+      },
+      {
+        id: 'user-tutor',
+        branchId: 'branch-bandung',
+        fullName: 'Ayu Santika',
+        email: 'ayu@bimbel.one',
+        phone: '+62 813 3333 333',
+        passwordHash: hashPassword('Tutor123!'),
+        status: 'active',
+        roleCodes: ['tutor'],
+        isMfaRequired: false
+      },
+      {
+        id: 'user-branch-admin',
+        branchId: 'branch-jkt-selatan',
+        fullName: 'Budi Wicaksono',
+        email: 'budi@bimbel.one',
+        phone: '+62 814 4444 444',
+        passwordHash: hashPassword('Branch123!'),
+        status: 'active',
+        roleCodes: ['branch_admin'],
+        isMfaRequired: true
+      },
+      {
+        id: 'user-support',
+        branchId: 'branch-surabaya',
+        fullName: 'Siti Aminah',
+        email: 'support@bimbel.one',
+        phone: '+62 815 5555 555',
+        passwordHash: hashPassword('Support123!'),
+        status: 'active',
+        roleCodes: ['support'],
+        isMfaRequired: false
+      }
+    ];
   }
-];
+  return _users;
+}
 
 export const permissionCatalog = Array.from(
   new Set(

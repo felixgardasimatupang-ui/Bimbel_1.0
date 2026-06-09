@@ -1,11 +1,10 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 
 import { AppShell } from '@/components/app-shell';
 
 export const metadata: Metadata = {
   title: 'Produksi | Bimbel One Platform',
-  description: 'Ringkasan arsitektur data, kontrol keamanan, dan kesiapan rilis.'
+  description: 'Ringkasan kontrol keamanan dan kesiapan operasional platform.'
 };
 
 export default function ProductionPage() {
@@ -13,43 +12,35 @@ export default function ProductionPage() {
     <AppShell
       activeSlug={undefined}
       title="Produksi"
-      description="Ringkasan teknis untuk memastikan platform siap dijalankan secara aman dan terukur."
+      description="Ringkasan keamanan dan kesiapan operasional Bimbel One Platform."
     >
       <section className="screenPanel">
         <div className="featureHero">
           <div>
-            <p className="eyebrow">Basis data dan keamanan</p>
-            <h2 className="sectionTitle">Panduan kesiapan produksi</h2>
+            <p className="eyebrow">Keamanan</p>
+            <h2 className="sectionTitle">Kesiapan operasional</h2>
             <p className="sectionLead">
-              Halaman ini merangkum prinsip sadar cabang, keterauditan, keamanan transport, dan rencana pemulihan
-              yang menjadi dasar panduan produksi.
+              Bimbel One Platform dirancang dengan keamanan berlapis dan perlindungan data
+              untuk mendukung operasional bimbel Anda.
             </p>
-          </div>
-          <div className="heroActions">
-            <Link className="metaPill" href="/api/v1/health">
-              Health API
-            </Link>
-            <Link className="metaPill" href="/api/v1/permissions">
-              Permissions API
-            </Link>
           </div>
         </div>
 
         <div className="metricGrid metricGrid3">
           <article className="metricCard">
-            <span className="metricLabel">Model multi-cabang</span>
-            <strong className="metricValue toneInfo">RLS + branch_id</strong>
-            <p className="metricNote">Setiap record bisnis membawa scope cabang yang tegas.</p>
+            <span className="metricLabel">Pengelolaan cabang</span>
+            <strong className="metricValue toneInfo">Multi-cabang</strong>
+            <p className="metricNote">Setiap cabang memiliki data yang terpisah dan aman.</p>
           </article>
           <article className="metricCard">
             <span className="metricLabel">Posisi keamanan</span>
             <strong className="metricValue toneSuccess">TLS + MFA</strong>
-            <p className="metricNote">Transport terenkripsi dan akses sensitif dilindungi MFA.</p>
+            <p className="metricNote">Koneksi terenkripsi dan akses sensitif dilindungi verifikasi dua langkah.</p>
           </article>
           <article className="metricCard">
-            <span className="metricLabel">Kesiapan operasional</span>
+            <span className="metricLabel">Kesiapan data</span>
             <strong className="metricValue toneWarning">Backup + DR</strong>
-            <p className="metricNote">Backup harian, arsip WAL, dan latihan pemulihan dijaga.</p>
+            <p className="metricNote">Backup harian dan rencana pemulihan untuk menjaga kelangsungan bisnis.</p>
           </article>
         </div>
 
@@ -57,28 +48,28 @@ export default function ProductionPage() {
           <section className="panel">
             <div className="panelHeader">
               <div>
-                <h3 className="panelTitle">Standar database</h3>
-                <p className="panelLead">Aturan inti untuk menjaga integritas dan keterlacakan data.</p>
+                <h3 className="panelTitle">Perlindungan data</h3>
+                <p className="panelLead">Prinsip utama untuk menjaga integritas dan keamanan data.</p>
               </div>
             </div>
             <div className="panelBody">
               <ul className="simpleList">
                 <li className="listRow">
                   <div>
-                    <strong>Kunci utama UUID</strong>
-                    <p>Semua entitas utama menggunakan UUID agar sulit ditebak dan aman untuk distribusi.</p>
+                    <strong>Identitas unik</strong>
+                    <p>Setiap data memiliki identitas unik yang aman dan sulit ditebak.</p>
                   </div>
                 </li>
                 <li className="listRow">
                   <div>
-                    <strong>Kolom audit</strong>
-                    <p>Setiap tabel penting membawa created_at, updated_at, deleted_at, created_by, updated_by.</p>
+                    <strong>Riwayat perubahan</strong>
+                    <p>Setiap perubahan data tercatat secara otomatis untuk keperluan audit.</p>
                   </div>
                 </li>
                 <li className="listRow">
                   <div>
-                    <strong>Isolasi cabang</strong>
-                    <p>Data operasional wajib membawa branch_id dan dapat dikunci lewat policy database.</p>
+                    <strong>Pemisahan cabang</strong>
+                    <p>Data operasional setiap cabang tersimpan secara terisolasi dan aman.</p>
                   </div>
                 </li>
               </ul>
@@ -89,27 +80,27 @@ export default function ProductionPage() {
             <div className="panelHeader">
               <div>
                 <h3 className="panelTitle">Kontrol keamanan</h3>
-                <p className="panelLead">Lapisan proteksi yang harus aktif sebelum rilis.</p>
+                <p className="panelLead">Lapisan perlindungan untuk menjaga data Anda tetap aman.</p>
               </div>
             </div>
             <div className="panelBody">
               <ul className="simpleList">
                 <li className="listRow">
                   <div>
-                    <strong>Autentikasi</strong>
-                    <p>Hash kata sandi yang kuat, pembatasan laju masuk, dan MFA untuk peran sensitif.</p>
+                    <strong>Autentikasi aman</strong>
+                    <p>Kata sandi dienkripsi dengan standar tinggi, dilengkapi perlindungan percobaan berulang.</p>
                   </div>
                 </li>
                 <li className="listRow">
                   <div>
-                    <strong>Transport dan secret</strong>
-                    <p>HTTPS, TLS basis data, dan pengelola secret untuk kredensial produksi.</p>
+                    <strong>Koneksi terenkripsi</strong>
+                    <p>Seluruh komunikasi data dilindungi dengan enkripsi transport modern.</p>
                   </div>
                 </li>
                 <li className="listRow">
                   <div>
-                    <strong>Logging dan audit</strong>
-                    <p>Audit log tidak dapat diubah, log terstruktur, correlation ID, dan masking data sensitif.</p>
+                    <strong>Catatan aktivitas</strong>
+                    <p>Semua aktivitas penting dicatat dengan aman untuk keperluan pemantauan.</p>
                   </div>
                 </li>
               </ul>
@@ -120,27 +111,27 @@ export default function ProductionPage() {
         <section className="panel">
           <div className="panelHeader">
             <div>
-              <h3 className="panelTitle">Daftar periksa rilis</h3>
-              <p className="panelLead">Daftar periksa produksi yang bisa dipakai sebagai gerbang sebelum rilis.</p>
+              <h3 className="panelTitle">Kesiapan platform</h3>
+              <p className="panelLead">Daftar periksa untuk memastikan platform siap digunakan.</p>
             </div>
           </div>
           <div className="panelBody">
             <div className="cardGrid cardGrid4">
               <article className="miniCard">
-                <strong>Skema siap</strong>
-                <p>Migrasi tervalidasi dan indeks utama sudah dibuat.</p>
+                <strong>Struktur data siap</strong>
+                <p>Seluruh tabel dan indeks telah dibuat dan siap digunakan.</p>
               </article>
               <article className="miniCard">
-                <strong>RLS aktif</strong>
-                <p>Policy sadar cabang aktif pada tabel yang sensitif.</p>
+                <strong>Keamanan data terpasang</strong>
+                <p>Pemisahan data dan kontrol akses telah aktif pada setiap cabang.</p>
               </article>
               <article className="miniCard">
                 <strong>Backup teruji</strong>
-                <p>Latihan pemulihan berhasil dan arsip WAL aktif.</p>
+                <p>Backup data berjalan otomatis dan pemulihan telah teruji.</p>
               </article>
               <article className="miniCard">
-                <strong>Monitoring aktif</strong>
-                <p>Alert untuk masuk anomali, backup, dan error layanan aktif.</p>
+                <strong>Pemantauan aktif</strong>
+                <p>Sistem pemantauan aktif untuk mendeteksi dan melaporkan anomali.</p>
               </article>
             </div>
           </div>

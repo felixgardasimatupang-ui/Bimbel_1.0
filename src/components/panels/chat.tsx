@@ -18,7 +18,7 @@ export function ChatPanel() {
   return (
     <section className="screenPanel">
       <div className="twoColLayout chatLayout">
-        <SectionCard title="Percakapan realtime" lead="Percakapan aktif dengan pelanggan atau orang tua.">
+        <SectionCard title="Percakapan realtime 💬" lead="Percakapan aktif dengan pelanggan atau orang tua.">
           <div className="chatThread">
             {messages.map((message) => (
               <article key={`${message.author}-${message.time}`} className={`chatBubble chatBubble${message.role === 'agent' ? 'Agent' : 'Customer'}`}>
@@ -31,11 +31,11 @@ export function ChatPanel() {
             ))}
           </div>
           <div className="composer">
-            <span>Tulis balasan...</span>
+            <span>✏️ Tulis balasan...</span>
             <Badge tone="info">Terjemahan otomatis aktif</Badge>
           </div>
         </SectionCard>
-        <SectionCard title="Panel kehadiran" lead="Tim yang sedang daring dan siap menanggapi.">
+        <SectionCard title="Panel kehadiran 🟢" lead="Tim yang sedang daring dan siap menanggapi.">
           <SimpleList items={[
             { title: 'Ayu Santika', meta: 'Agen senior · daring', tone: 'success' as const, extra: '2 chat' },
             { title: 'Rizky Pratama', meta: 'Agen dukungan · tidak aktif', tone: 'warning' as const, extra: '1 chat' },

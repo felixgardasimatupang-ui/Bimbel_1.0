@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { branches, roles, users, permissionCatalog } from '@/server/catalog';
+import { branches, roles, getUsers, permissionCatalog } from '@/server/catalog';
 
 describe('catalog', () => {
   describe('branches', () => {
@@ -51,6 +51,8 @@ describe('catalog', () => {
   });
 
   describe('users', () => {
+    const users = getUsers();
+
     it('has exactly 5 users', () => {
       expect(users).toHaveLength(5);
     });

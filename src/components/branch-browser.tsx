@@ -68,8 +68,8 @@ export function BranchBrowser({ branches }: BranchBrowserProps) {
           <p className="eyebrow">Cabang terpilih</p>
           <h3 className="panelTitle">{activeBranch?.name ?? 'Tidak ada cabang'}</h3>
           <p className="sectionLead">
-            {activeBranch
-              ? 'Detail cabang ini bisa dipakai untuk memahami scope data dan isolasi tenant.'
+              {activeBranch
+              ? 'Detail informasi cabang yang dipilih.'
               : 'Pilih cabang untuk melihat detail.'}
           </p>
 

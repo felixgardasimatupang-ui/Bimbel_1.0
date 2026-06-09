@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 
-import { branches, type BranchRecord, type PermissionKey, type RoleCode, type UserRecord, users } from '@/server/catalog';
+import { branches, getUsers, type BranchRecord, type PermissionKey, type RoleCode, type UserRecord } from '@/server/catalog';
 import { recordAuditEvent, type AuditOutcome } from '@/server/audit-store';
 import { getPermissionsForRoleCodes } from '@/server/rbac';
 import { verifyPasswordAsync } from '@/server/password';
@@ -47,7 +47,7 @@ export function sanitizeUser(user: UserRecord) {
 export function findUserByIdentifier(identifier: string) {
   const normalized = identifier.trim().toLowerCase();
 
-  return users.find((user) => user.email.toLowerCase() === normalized || user.phone === normalized);
+  return getUsers().find((user) => user.email.toLowerCase() === normalized || user.phone === normalized);
 }
 
 export function findBranchByCode(branchCode: string) {

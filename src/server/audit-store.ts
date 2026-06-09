@@ -62,3 +62,21 @@ export function recordAuditEvent(entry: Omit<AuditEventRecord, 'id' | 'timestamp
 export function listAuditEvents() {
   return [...auditEvents];
 }
+
+export function listAuditEventsPaginated(params: {
+  branchId?: string;
+  page: number;
+  pageSize: number;
+}) {
+  const { branchId, page, pageSize } = params;
+  const filtered = branchId
+    ? auditEvents.filter((e) => e.branchId === branchId)
+    : [...auditEvents];
+
+  const total = filtered.length;
+  const totalPages = Math.ceil(total / pageSize) || 1;
+  const start = (page - 1) * pageSize;
+  const items = filtered.slice(start, start + pageSize);
+
+  return { items, total, page, pageSize, totalPages };
+}

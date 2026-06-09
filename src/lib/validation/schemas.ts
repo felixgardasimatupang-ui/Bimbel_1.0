@@ -16,10 +16,5 @@ export const branchQuerySchema = z.object({
   status: z.enum(['active', 'inactive', 'all']).optional()
 });
 
-export const auditLogQuerySchema = z.object({
-  branchId: z.string().min(1, 'Branch ID tidak valid.').optional()
-});
-
 export type LoginInput = z.infer<typeof loginSchema>;
 export type BranchQuery = z.infer<typeof branchQuerySchema>;
-export type AuditLogQuery = z.infer<typeof auditLogQuerySchema>;

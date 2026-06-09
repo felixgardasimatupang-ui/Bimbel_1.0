@@ -7,7 +7,7 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: 'Bimbel One Platform',
-  description: 'Ruang kerja Next.js untuk layar dan alur operasional Bimbel One Platform.'
+  description: 'Ruang kerja untuk layar dan alur operasional Bimbel One Platform.'
 };
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {

@@ -2,10 +2,10 @@ import { MetricCard, SectionCard, DataTable, SimpleList, Badge } from './shared'
 
 export function DashboardPanel() {
   const metrics = [
-    { label: 'Pendapatan total', value: 'Rp 124,5M', note: '+12,5% dibanding bulan lalu', tone: 'success' as const },
-    { label: 'Siswa aktif', value: '842', note: '+42 siswa baru pada periode ini', tone: 'info' as const },
-    { label: 'Tingkat kehadiran', value: '94,2%', note: 'Turun 1,2% dari pekan lalu', tone: 'warning' as const },
-    { label: 'Invoice tertunda', value: '34', note: 'Perlu tindak lanjut hari ini', tone: 'danger' as const }
+    { label: 'Pendapatan total', value: 'Rp 124,5M', emoji: '💰', note: '+12,5% dibanding bulan lalu', tone: 'success' as const },
+    { label: 'Siswa aktif', value: '842', emoji: '👥', note: '+42 siswa baru pada periode ini', tone: 'info' as const },
+    { label: 'Tingkat kehadiran', value: '94,2%', emoji: '📊', note: 'Turun 1,2% dari pekan lalu', tone: 'warning' as const },
+    { label: 'Invoice tertunda', value: '34', emoji: '📋', note: 'Perlu tindak lanjut hari ini', tone: 'danger' as const }
   ];
 
   const priorities = [
@@ -32,14 +32,14 @@ export function DashboardPanel() {
         {metrics.map((metric) => (<MetricCard key={metric.label} {...metric} />))}
       </div>
       <div className="twoColLayout">
-        <SectionCard title="Prioritas hari ini" lead="Tugas yang paling bernilai untuk diselesaikan terlebih dahulu.">
+        <SectionCard title="Prioritas hari ini ⚡" lead="Tugas yang paling bernilai untuk diselesaikan terlebih dahulu.">
           <SimpleList items={priorities} />
         </SectionCard>
-        <SectionCard title="Penerimaan terbaru" lead="Prospek yang sedang bergerak di alur tindak lanjut.">
+        <SectionCard title="Penerimaan terbaru 🎓" lead="Prospek yang sedang bergerak di alur tindak lanjut.">
           <SimpleList items={admissions} />
         </SectionCard>
       </div>
-      <SectionCard title="Kesehatan cabang" lead="Ringkasan sadar cabang untuk pemantauan cepat.">
+      <SectionCard title="Kesehatan cabang 🏢" lead="Ringkasan sadar cabang untuk pemantauan cepat.">
         <DataTable
           columns={[{ label: 'Cabang' }, { label: 'Okupansi' }, { label: 'Status', align: 'right' }]}
           rows={branches}

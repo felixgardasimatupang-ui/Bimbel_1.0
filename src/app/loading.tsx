@@ -1,9 +1,12 @@
 export default function Loading() {
   return (
-    <main className="notFound">
-      <p className="eyebrow">Memuat</p>
-      <h1 className="pageTitle">Menyiapkan ruang kerja</h1>
-      <p className="pageLead">Konten sedang diproses agar rute siap digunakan.</p>
+    <main className="loadingPage">
+      <div className="notFoundCard">
+        <div className="spinner" />
+        <p className="eyebrow">Memuat</p>
+        <h2 className="sectionTitle">Menyiapkan ruang kerja</h2>
+        <p className="sectionLead">Konten sedang diproses, harap tunggu sebentar.</p>
+      </div>
     </main>
   );
 }
